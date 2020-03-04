@@ -20,8 +20,8 @@ void Timer2_Init()
 	
 	NVIC_InitStrue.NVIC_IRQChannel = TIM2_IRQn;
 	NVIC_InitStrue.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_InitStrue.NVIC_IRQChannelPreemptionPriority = 2;
-	NVIC_InitStrue.NVIC_IRQChannelSubPriority = 4;
+	NVIC_InitStrue.NVIC_IRQChannelPreemptionPriority = 3;
+	NVIC_InitStrue.NVIC_IRQChannelSubPriority = 1;
 	NVIC_Init(&NVIC_InitStrue);//设置中断分组	
 	
 	TIM_Cmd(TIM2, ENABLE);
@@ -44,8 +44,8 @@ void Timer3_Init()
 	
 	NVIC_InitStrue.NVIC_IRQChannel = TIM3_IRQn;
 	NVIC_InitStrue.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_InitStrue.NVIC_IRQChannelPreemptionPriority = 2;
-	NVIC_InitStrue.NVIC_IRQChannelSubPriority = 5;
+	NVIC_InitStrue.NVIC_IRQChannelPreemptionPriority = 4;
+	NVIC_InitStrue.NVIC_IRQChannelSubPriority = 1;
 	NVIC_Init(&NVIC_InitStrue);//设置中断分组	
 	
 	TIM_Cmd(TIM3, ENABLE);

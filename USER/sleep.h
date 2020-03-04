@@ -5,7 +5,7 @@
 
 
 void Enter_sleepmode(void);
-void RTC_Init(void);
+uint8_t RTC_Init(void);
 void RTC_NVIC_Init(void);
 void RTCALR_Set();
 

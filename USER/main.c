@@ -13,6 +13,7 @@ int TIM2_flag = 0;
 int TIM3_flag = 0; 
 
 uint16_t temp = 1;
+uint16_t num_echo = 48;
 
 int main(void)
 {	
@@ -20,16 +21,16 @@ int main(void)
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	RTC_Init();	
 	LED_GPIO_Config();	
-	Timer2_Init();	
 	Timer3_Init();
+	Timer2_Init();		
 	EXIT_Init();
 	UART_Init();
-	LED_On();
-	Delayms(1000);
-	LED_Off();
-	Delayms(1000);
-	LED_On();
-	Delayms(1000);
+//	LED_On();
+//	Delayms(1000);
+//	LED_Off();
+//	Delayms(1000);
+//	LED_On();
+//	Delayms(1000);
 
 //	PWR_EnterSTANDBYMode();	
 	while(1){
@@ -49,19 +50,23 @@ int main(void)
 		}
 		if(TIM3_flag == 1)
 		{
-			USART_SendByte('a');
-			TIM3_flag = 0;
+			USART_SendData(USART1,num_echo++);
+			TIM3_flag = 0;					
+		}		
+		if(TIM2_flag == 1)
+		{
+			//TIM2 Handler			
 			
-			if(TIM2_flag == 1)
+			while(USART_GetFlagStatus(USART1,USART_FLAG_TC) == RESET);			
+			TIM2_flag = 0;				
+			if(temp == 2)
 			{
-				//TIM2 Handler			
-				USART_SendByte('B');
-				while(USART_GetFlagStatus(USART1,USART_FLAG_TC) == RESET);			
-				TIM2_flag = 0;
+				USART_SendString("Time to STANDBY.");
 				PWR_EnterSTANDBYMode();
-				//PWR_EnterSTOPMode(PWR_Regulator_ON, PWR_STOPEntry_WFI|PWR_STOPEntry_WFE);
-			}			
-		}
+			}
+			temp++;
+			//PWR_EnterSTOPMode(PWR_Regulator_ON, PWR_STOPEntry_WFI|PWR_STOPEntry_WFE);
+		}	
 	}
 }
 	

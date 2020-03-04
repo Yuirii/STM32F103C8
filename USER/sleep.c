@@ -10,38 +10,67 @@ void Enter_sleepmode()
 	
 }
 
-void RTC_Init(void)
+uint8_t RTC_Init(void)
 {
+	uint8_t temp = 0;
 	//uint16_t flash_str = BKP_ReadBackupRegister(BKP_DR1);
 	
 	RCC_APB1PeriphClockCmd( RCC_APB1Periph_PWR, ENABLE);	
 	PWR_BackupAccessCmd(ENABLE);
 		
-	//BKP_ClearFlag();
-	//BKP_DeInit(); //reset
-	RCC_LSEConfig(RCC_LSE_ON);//lse set
-	while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
-	{		}
-	
-	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE); //choose LSE as RTCCLK
-	RCC_RTCCLKCmd(ENABLE);
-	
-	RTC_WaitForLastTask();
-	RTC_WaitForSynchro();
-	RTC_ITConfig(RTC_IT_ALR, ENABLE); //rtc
-	RTC_WaitForLastTask();
+//	if(BKP_ReadBackupRegister(BKP_DR1) != 0xC0B4)//not judgment!????
+//	{
+//		BKP_ClearFlag();
+//		BKP_DeInit(); //reset
+		RCC_LSEConfig(RCC_LSE_ON);//lse set
+		while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
+		{		}
+//		while (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)	
+//			{
+//			    temp++;
+//			    Delayms(10);
+//			}
 
-	RTC_SetPrescaler(32767);
-	RTC_WaitForLastTask();
-	
-	RTCALR_Set(); //报警时间设置
+//		if(temp>=250) return 1;  
+		
+		RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE); //choose LSE as RTCCLK
+		RCC_RTCCLKCmd(ENABLE);
+		
+		RTC_WaitForLastTask();
+		RTC_WaitForSynchro();
+		RTC_ITConfig(RTC_IT_ALR, ENABLE); //rtc
+		RTC_WaitForLastTask();
 
+		RTC_SetPrescaler(32767);
+		RTC_WaitForLastTask();
+		
+		RTCALR_Set(); //报警时间设置
+		
+//		BKP_WriteBackupRegister(BKP_DR1, 0XC0B4);
+		PWR_BackupAccessCmd(DISABLE);   
+//	}
+//	else
+//	{
+//		PWR_BackupAccessCmd(DISABLE);
+
+//		RTC_WaitForSynchro();
+
+//		RTC_ITConfig(RTC_IT_ALR,ENABLE); //??RTC?????????	
+
+//		RTC_WaitForLastTask();
+//		 
+//	}
+//	RTC_NVIC_Init();
+	return 0;
 }
 
 void RTC_IRQHandler(void)
 {
-//	RTC_WaitForSynchro();
+	RTC_WaitForSynchro();
 //	RTC_flag = 1;
+//	PWR_BackupAccessCmd(ENABLE);
+//	RTC_SetAlarm(10+RTC_GetCounter());
+//	PWR_BackupAccessCmd(DISABLE);
 	RTC_ClearITPendingBit(RTC_IT_ALR);
 }
 
@@ -60,7 +89,7 @@ void RTCALR_Set()
 {
 	RTC_SetCounter(0);
 	RTC_WaitForLastTask();
-	RTC_SetAlarm(10); 
+	RTC_SetAlarm(9); 
 	RTC_WaitForLastTask();  
 	RTC_WaitForSynchro();
 }
