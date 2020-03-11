@@ -27,6 +27,7 @@ void Timer2_Init()
 	TIM_Cmd(TIM2, ENABLE);
 }
 
+
 void Timer3_Init()
 {
 	TIM_TimeBaseInitTypeDef TIMBSINT;
